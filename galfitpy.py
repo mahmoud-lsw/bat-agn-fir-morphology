@@ -122,8 +122,29 @@ def add_gaussian_component(input_file, center, int_mag, fwhm, axis_ratio, pa,
     fn.close()
 
     
+def add_psf_component(input_file, center, int_mag, center_fixed=False,
+                      int_mag_fixed=False, output_option=0):
+
+    fn = open(input_file, 'a')
     
+    fn.write('\n# PSF\n')
+    fn.write('0) psf # Component Type\n')
+   
+    if center_fixed:
+        fn.write('1) {0:0.2f} {1:0.2f} 0 0 # Component center\n'.format(center[0], center[1]))
+    else:
+        fn.write('1) {0:0.2f} {1:0.2f} 1 1 # Component center\n'.format(center[0], center[1]))
+
+    if int_mag_fixed:
+        fn.write('3) {0:0.2f} 0 # Integrated Magnitude\n'.format(int_mag))
+    else:
+        fn.write('3) {0:0.2f} 1 # Integrated Magnitude\n'.format(int_mag))
     
+    fn.write('Z) '+str(output_option)+" #  Output option (0 = resid., 1 = Don't subtract) \n")
+    
+    fn.close()    
+    
+
 
     
     
