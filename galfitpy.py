@@ -145,8 +145,32 @@ def add_psf_component(input_file, center, int_mag, center_fixed=False,
     fn.close()    
     
 
+def add_sky_component(input_file, sky_center, dx=0.0, dy=0.0, sky_center_fixed=False,
+                      dx_fixed=True, dy_fixed=True, output_option=0):
 
+    fn = open(input_file, 'a')
     
+    fn.write('\n# Sky\n')
+    fn.write('0) sky # Component Type\n')
+   
+    if sky_center_fixed:
+        fn.write('1) {0:0.2f} 0 # Sky background at image center\n'.format(sky_center))
+    else:
+        fn.write('1) {0:0.2f} 1 # Sky background at image center\n'.format(sky_center))
+        
+    if dx_fixed:
+        fn.write('2) {0:0.2f} 0 # sky gradient in x direction\n'.format(dx))
+    else:
+        fn.write('2) {0:0.2f} 1 # sky gradient in x direction\n'.format(dx))
+    
+    if dy_fixed:
+        fn.write('3) {0:0.2f} 0 # sky gradient in y direction\n'.format(dy))
+    else:
+        fn.write('3) {0:0.2f} 1 # sky gradient in y direction\n'.format(dy))
+    
+    fn.write('Z) '+str(output_option)+" #  Output option (0 = resid., 1 = Don't subtract) \n")
+    
+    fn.close()    
     
     
     
