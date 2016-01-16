@@ -45,7 +45,7 @@ def add_sersic_component(input_file, center, int_mag, r_e, sersic_n, axis_ratio,
 
     fn = open(input_file, 'a')
     
-    fn.write('# Sersic\n')
+    fn.write('\n# Sersic\n')
     fn.write('0) sersic # Component Type\n')
    
     if center_fixed:
@@ -83,7 +83,43 @@ def add_sersic_component(input_file, center, int_mag, r_e, sersic_n, axis_ratio,
     fn.close()
 
 
+def add_gaussian_component(input_file, center, int_mag, fwhm, axis_ratio, pa,
+                      center_fixed=False, int_mag_fixed=False, fwhm_fixed=False,
+                      axis_ratio_fixed=False, pa_fixed=False, output_option=0):
 
+    fn = open(input_file, 'a')
+    
+    fn.write('\n# Gaussian\n')
+    fn.write('0) gaussian # Component Type\n')
+   
+    if center_fixed:
+        fn.write('1) {0:0.2f} {1:0.2f} 0 0 # Component center\n'.format(center[0], center[1]))
+    else:
+        fn.write('1) {0:0.2f} {1:0.2f} 1 1 # Component center\n'.format(center[0], center[1]))
+
+    if int_mag_fixed:
+        fn.write('3) {0:0.2f} 0 # Integrated Magnitude\n'.format(int_mag))
+    else:
+        fn.write('3) {0:0.2f} 1 # Integrated Magnitude\n'.format(int_mag))
+    
+    if fwhm_fixed:
+        fn.write('4) {0:0.2f} 0 # FWHM\n'.format(fwhm))
+    else:
+        fn.write('4) {0:0.2f} 1 # FWHM\n'.format(fwhm))
+    
+    if axis_ratio_fixed:
+        fn.write('9) {0:0.2f} 0 # Axis ratio (b/a)\n'.format(axis_ratio))
+    else:
+        fn.write('9) {0:0.2f} 1 # Axis ratio (b/a)\n'.format(axis_ratio))
+    
+    if pa_fixed:
+        fn.write('10) {0:0.2f} 0 # Position angle\n'.format(pa))
+    else:
+        fn.write('10) {0:0.2f} 1 # Position angle\n'.format(pa))
+    
+    fn.write('Z) '+str(output_option)+" #  Output option (0 = resid., 1 = Don't subtract) \n")
+    
+    fn.close()
 
     
     
