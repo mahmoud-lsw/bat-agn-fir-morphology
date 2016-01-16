@@ -1,6 +1,21 @@
 # Functions and script to fit the alphaTau PSF made with scanamorphos with a
 # Sersic to the BAT AGN
 
+# Standard scientific imports
+import numpy as np
+import pandas as pd
+
+# Astropy imports
+import astropy.units as u
+import astropy.coordinates as coord
+import astropy.io.fits as pyf
+from astropy import wcs
+from astropy.stats import sigma_clipped_stats, gaussian_sigma_to_fwhm, gaussian_fwhm_to_sigma
+from astropy.convolution import Gaussian2DKernel
+
+# Photutils imports
+from photutils import detect_sources, segment_properties
+
 def create_galfit_input_param(filename, src_file, out_file, err_file, psf_file,
                               img_region, conv_box, psf_fine_samp=1.0, bad_pix_mask_file=None,
                               constraint_file=None, zero_pnt=0.0, plate_scale=1.0, display_type='regular',
