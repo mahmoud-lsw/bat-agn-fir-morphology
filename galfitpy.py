@@ -235,10 +235,19 @@ def get_galfit_param(img, src, waveband, region_size=10., model='sersic'):
 
     center = [src.xcentroid.value, src.ycentroid.value]
     if model != 'psf':
+        
+        # Change from elongation (a/b) to axis ratio (b/a)
         axis_ratio = 1./src.elongation.value
+        
+        # Transform to coordinate system used by GALFIT for the
+        # orientation (up = 0 deg and left = 90 deg).
         pa = src.orientation.to(u.deg).value + 90
+        
+        # Convert sigma axis values to FWHM
         fwhm_major = src.semimajor_axis_sigma.value*2.355
         fwhm_minor = src.semiminor_axis_sigma.value*2.355
+        
+        # Circularize the FWHM to compare to PSF FWHM
         fwhm_circle = np.sqrt((fwhm_major**2 + fwhm_minor**2)/2.)
     
         if fwhm_circle > psf_fwhm[waveband]/pix_scale[waveband]:
