@@ -1,2 +1,5 @@
 # Ignore file for bat-agn-fir-morphology
 *.pyc
+galfit.*
+fit.log
+*.fits
