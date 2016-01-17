@@ -262,3 +262,7 @@ def get_galfit_param(img, src, waveband, region_size=10., model='sersic'):
     else:
         return center, region, src_size, axis_ratio, pa
 
+
+def run_galfit(input_file):
+
+    os.system('~/src/galfit3.0/galfit '+input_file)
