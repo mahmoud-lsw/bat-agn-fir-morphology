@@ -275,7 +275,23 @@ def get_galfit_param(img, src, waveband, region_size=10., model='sersic'):
     else:
         return center, region, src_size, axis_ratio, pa
 
+# Function to create a bad pixel mask. Outputs a file that is a list
+# of pixel coordinates that are either NaN in the signal map or 
+# 0/infinite in the error map.
+ def create_bad_pixel_mask(img, err_img, filename='bad_pixels.txt'):
 
+    nanmask = np.isnan(img)
+    errmask = (err_img <= 0) | (~np.isfinite(err_img))
+    fn = open(filename, 'w')
+    
+    for x in range(img.shape[1]):
+        for y in range(img.shape[0]):
+            if (nanmask[y, x] | errmask[y, x]):
+                fn.write('{0:d} {1:d}\n'.format(x+1, y+1))
+    
+    fn.close()
+    
+    
 def run_galfit(input_file):
 
     os.system('~/src/galfit3.0/galfit '+input_file)
