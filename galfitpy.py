@@ -4,6 +4,7 @@
 # Standard scientific imports
 import numpy as np
 import pandas as pd
+import os
 
 # Astropy imports
 import astropy.units as u
@@ -188,7 +189,7 @@ def add_sky_component(input_file, sky_center, dx=0.0, dy=0.0, sky_center_fixed=F
     fn.close()    
     
  
- # Function to estimate the global sky background
+# Function to estimate the global sky background
 def estimate_sky(image, clip=3.0):
 
     # Create the NaN mask
@@ -197,8 +198,10 @@ def estimate_sky(image, clip=3.0):
     # Estimate of the global sky background from sigma-clipping
     im_mean, im_med, im_std = sigma_clipped_stats(image, sigma=clip, mask=nanmask)
     
-    return im_med, im_std   
-    # Function to find the source from segmentation map
+    return im_med, im_std
+
+
+# Function to find the source from segmentation map
 def find_source(img, thresh, im_wcs, coord_src, rdist):
 
     segm_img = detect_sources(img, thresh, npixels=5)
@@ -215,6 +218,7 @@ def find_source(img, thresh, im_wcs, coord_src, rdist):
         return props[ind_closest]
     else:
         return None   
+
 
 # Function that converts the source properties from photutils to initial parameters
 # for GALFIT
