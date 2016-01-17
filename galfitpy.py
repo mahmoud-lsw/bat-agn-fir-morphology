@@ -198,4 +198,21 @@ def estimate_sky(image, clip=3.0):
     im_mean, im_med, im_std = sigma_clipped_stats(image, sigma=clip, mask=nanmask)
     
     return im_med, im_std   
-    
+    # Function to find the source from segmentation map
+def find_source(img, thresh, im_wcs, coord_src, rdist):
+
+    segm_img = detect_sources(img, thresh, npixels=5)
+    props = segment_properties(img, segm_img, wcs=im_wcs)
+    ra_src = [p.ra_icrs_centroid for p in props]
+    dec_src = [p.dec_icrs_centroid for p in props]
+
+    coord_src_img = coord.SkyCoord(ra_src, dec_src, frame='icrs')
+    dist = coord_src.separation(coord_src_img).to(u.arcsec)
+    ind_closest = np.argmin(dist)
+    cdist = np.min(dist).value
+
+    if cdist < rdist:
+        return props[ind_closest]
+    else:
+        return None   
+
