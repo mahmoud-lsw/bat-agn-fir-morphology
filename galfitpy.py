@@ -216,3 +216,49 @@ def find_source(img, thresh, im_wcs, coord_src, rdist):
     else:
         return None   
 
+# Function that converts the source properties from photutils to initial parameters
+# for GALFIT
+def get_galfit_param(img, src, waveband, region_size=10., model='sersic'):
+
+    center = [src.xcentroid.value, src.ycentroid.value]
+    if model != 'psf':
+        axis_ratio = 1./src.elongation.value
+        pa = src.orientation.to(u.deg).value + 90
+        fwhm_major = src.semimajor_axis_sigma.value*2.355
+        fwhm_minor = src.semiminor_axis_sigma.value*2.355
+        fwhm_circle = np.sqrt((fwhm_major**2 + fwhm_minor**2)/2.)
+    
+        if fwhm_circle > psf_fwhm[waveband]/pix_scale[waveband]:
+            fwhm_int = np.sqrt(fwhm_circle**2 - (psf_fwhm[waveband]/pix_scale[waveband])**2)
+        else:
+            fwhm_int = 1.0
+    
+        if model=='gaussian':
+            src_size = fwhm_int
+        elif model=='sersic':
+            src_size = fwhm_int/2.0
+        
+        if src_size < 1.0:
+            src_size = 1.0
+        
+        box_size = np.max([region_size*fwhm_int, 75.0])
+    else:
+        box_size = 75.0
+
+    region = np.array([center[0]-box_size/2., center[0]+box_size/2.,
+                       center[1]-box_size/2., center[1]+box_size/2.],
+                      dtype=np.int)
+    if region[0] < 1:
+		region[0] = 1
+    if region[2] < 1:
+        region[2] = 1
+    if region[1] > img.shape[1]:
+        region[1] = img.shape[1]
+    if region[3] > img.shape[0]:
+        region[3] = img.shape[0]
+	
+    if model == 'psf':
+	    return center, region
+    else:
+        return center, region, src_size, axis_ratio, pa
+
