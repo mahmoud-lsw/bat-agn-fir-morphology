@@ -187,5 +187,15 @@ def add_sky_component(input_file, sky_center, dx=0.0, dy=0.0, sky_center_fixed=F
     
     fn.close()    
     
+ 
+ # Function to estimate the global sky background
+def estimate_sky(image, clip=3.0):
+
+    # Create the NaN mask
+    nanmask = np.isnan(image)
     
+    # Estimate of the global sky background from sigma-clipping
+    im_mean, im_med, im_std = sigma_clipped_stats(image, sigma=clip, mask=nanmask)
+    
+    return im_med, im_std   
     
