@@ -17,6 +17,15 @@ from astropy.convolution import Gaussian2DKernel
 # Photutils imports
 from photutils import detect_sources, segment_properties
 
+# FWHM Sizes for PACS PSF
+psf_fwhm = {'blue': 5.299,
+            'red': 10.632}
+
+# Pixel Scale
+pix_scale = {'blue': 1.4,
+             'red': 2.85}
+
+
 def create_galfit_input_param(filename, src_file, out_file, err_file, psf_file,
                               img_region, conv_box, psf_fine_samp=1.0, bad_pix_mask_file=None,
                               constraint_file=None, zero_pnt=0.0, plate_scale=1.0, display_type='regular',
