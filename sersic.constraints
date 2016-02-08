@@ -1,6 +1,6 @@
 # Component/    parameter   constraint	Comment
 # operation	(see below)   range
-    3              n        0.5 to 8    
+    1              n        0.5 to 8    #
 					
 # Note on parameter column:
 #   The parameter name options are x, y, mag, re (or rs -- it doesn't matter),
