@@ -5,3 +5,4 @@ fit.log
 *.fits
 bad_pixel.txt
 test*
+results/**
