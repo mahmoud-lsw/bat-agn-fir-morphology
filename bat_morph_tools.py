@@ -4,8 +4,11 @@ import astropy.coordinates as coord
 import astropy.wcs as wcs
 import astropy.io.fits as fits
 import astropy.units as u
-import galfitpy
 import os
+import sys
+
+sys.path.append('../galfitpy/')
+import galfitpy
 
 import matplotlib.pyplot as plt
 import aplpy
@@ -21,6 +24,14 @@ pix_scale = {'PACS': {'blue': 1.4,
              'SPIRE': {'blue': 4.5,
                        'green': 6.25,
                        'red': 9.0}}
+
+psf_fwhm = {'PACS': {'blue': 6.26,
+                     'red': 12.30},
+            'SPIRE': {'blue': 17.6,
+                      'green': 23.9,
+                      'red': 35.2}}
+                       
+
 def get_bat_coords(name):
 
     bat_info = pd.read_csv('/Users/ttshimiz/Github/bat-data/bat_info.csv',
@@ -188,14 +199,13 @@ def run_galfit_single(name, instr, wave, models, conv_box=[200,200], region_size
     thresh = im_med + thresh_level*im_std
     
     # Find and estimate parameters of the source
-    rdist = search_radius*galfitpy.psf_fwhm[wave]
+    rdist = search_radius*psf_fwhm[instr][wave]
     source = galfitpy.find_source(src_img, thresh, wcs_img, cs, rdist)
     
     # Convert to parameters that GALFIT needs
     if source is not None:
         center, region, src_size, axis_ratio, pa = galfitpy.get_galfit_param(src_img, source, wave,
-                                                                             region_size=region_size)
-                                                                             
+                                                                             region_size=region_size)                                                                            
     else:
         pix_src = cs.to_pixel(wcs_img, origin=0)
         center = np.array([pix_src[0], pix_src[1]])
@@ -223,7 +233,7 @@ def run_galfit_single(name, instr, wave, models, conv_box=[200,200], region_size
     # Filenames of the image, error image, psf, and output file
     src_file = dir+name+'_scanamorphos_'+instr.lower()+wavelength+'_signal.fits'
     err_file = dir+name+'_scanamorphos_'+instr.lower()+wavelength+'_error.fits'
-    psf_file = 'alphaTau20'+wave+'+'+str(np.int(psf_rotation))+'_scanamorphos.fits'
+    psf_file = 'alphaTaupsf/alphaTau20'+wave+'+'+str(np.int(psf_rotation))+'_scanamorphos.fits'
     out_file = out_dir+name+'_'+instr.lower()+wavelength+out_suffix+'.fits'
     input_file = out_dir+name+'_'+instr.lower()+wavelength+out_suffix+'.input'
     
@@ -300,8 +310,8 @@ def plot_galfit_results(out_file, name):
     model_fig.set_theme('publication')
     resid_fig.set_theme('publication')
     
-    data_fig.show_colorscale(cmap='viridis', stretch='log', vmid=-100)
-    model_fig.show_colorscale(cmap='viridis', stretch='log', vmid=-100)
+    data_fig.show_colorscale(cmap='viridis', stretch='log', vmin=0, vmid=-1e-3)
+    model_fig.show_colorscale(cmap='viridis', stretch='log', vmin=0, vmid=-1e-3)
     resid_fig.show_colorscale(cmap='viridis', stretch='linear')
     
     data_fig.show_colorbar()
