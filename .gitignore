@@ -4,9 +4,11 @@ galfit.*
 fit.log
 bad_pixel.txt
 test*
-results/sersic/**
 results/sersicANDpsf/**
 results/psf/PACS70/*psf.fits
 results/psf/PACS70/*.input
 results/psf/PACS70/*.txt
+results/sersic/PACS70/*sersic.fits
+results/sersic/PACS70/*.input
+results/sersic/PACS70/*.txt
 alphaTaupsf/**
