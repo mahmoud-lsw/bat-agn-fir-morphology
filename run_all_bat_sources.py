@@ -24,11 +24,12 @@ result_dict = {}
 for n in names:
     
     pra = np.int(pacs_info.loc[n, 'PSF Rotation Angle'])
-    result = bmt.run_galfit_single(n, instrument, band, models, region_size=5.0,
-                                   psf_rotation=pra, out_dir=out_dir, out_suffix='_sersic')
+    if (pra != 180):
+        result = bmt.run_galfit_single(n, instrument, band, models, region_size=5.0,
+                                       psf_rotation=pra, out_dir=out_dir, out_suffix='_sersic')
                                    
-    result_dict[n] = result
+        result_dict[n] = result
 
-f = open(morph_dir+'sersic_fit_results_02-29-2016.pkl', 'wb')
+f = open(morph_dir+'sersic_fit_results_05-16-2016_pranot180.pkl', 'wb')
 pickle.dump(result_dict, f)
 f.close()
