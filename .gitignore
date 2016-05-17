@@ -2,7 +2,11 @@
 *.pyc
 galfit.*
 fit.log
-*.fits
 bad_pixel.txt
 test*
-results/**
+results/sersic/**
+results/sersicANDpsf/**
+results/psf/PACS70/*psf.fits
+results/psf/PACS70/*.input
+results/psf/PACS70/*.txt
+alphaTaupsf/**
