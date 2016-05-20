@@ -12,3 +12,4 @@ results/sersic/PACS70/*sersic.fits
 results/sersic/PACS70/*.input
 results/sersic/PACS70/*.txt
 alphaTaupsf/**
+*.xlsx
