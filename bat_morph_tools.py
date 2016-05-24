@@ -322,4 +322,42 @@ def plot_galfit_results(out_file, name):
                        horizontalalignment='left', verticalalignment='top')
     
     return fig
+
+
+def calc_sersic_radius_perc(n, frac):
+    """Calculates the normalized radius of a Sersic profile that contains
+       fractional flux, 'frac'
+    """
+    
+    # First find kappa such that Gamma(2n) = 2*gamma(2n, kappa)
+    # Note that scipy.special.gammainc(a, x) is normalized by 1/Gamma(a)
+    g2n = spec.gamma(2*n)
+    f1 = lambda k: 2*spec.gammainc(2*n, k)*g2n - g2n
+    
+    # Use MacArthur+2003 for guess of kappa
+    if n > 0.36:
+        kappa0 = (2*n - 1./3. + 4./(405*n) + 46./(25515*n**2) + 131./(1148175*n**3) -
+                2194697./(30690717750.*n**4))
+    else:
+        a0 = 0.01945
+        a1 = -0.8902
+        a2 = 10.95
+        a3 = -19.67
+        a4 = 13.43
+        kappa0 = a0 + a1*n + a2*n**2 + a3*n**3 + a4*n**4
+    
+    kappa = opt.newton(f1, kappa0, maxiter=1000)
+    
+    # Solve for the normalized radius = r/re
+    # Use Brent's method for root-finding
+    # Need to bracket the real value by finding where the sign changes
+    f2 = lambda x: spec.gammainc(2*n, kappa*x**(1/n)) - frac
+    rtest = np.arange(0, 100., 0.01)
+    ftest = f2(rtest)
+    a = rtest[ftest < 0][-1] 
+    b = rtest[ftest > 0][0]
+    rp = opt.brentq(f2, a, b, maxiter=1000)
+    
+    return rp
+    
                                                     
