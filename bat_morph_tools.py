@@ -1,4 +1,6 @@
 import numpy as np
+import scipy.special as spec
+import scipy.optimize as opt
 import pandas as pd
 import astropy.coordinates as coord
 import astropy.wcs as wcs
@@ -249,14 +251,14 @@ def run_galfit_single(name, instr, wave, models, conv_box=[200,200], region_size
     if (models == 'psf'):
         galfitpy.add_psf_component(input_file, center, mag)
     elif (models == 'sersic'):
-        galfirpy.add_sersic_component(input_file, center, mag, src_size, 1.0, axis_ratio, pa)
+        galfitpy.add_sersic_component(input_file, center, mag, src_size, 1.0, axis_ratio, pa)
     elif (models == 'gauss'):
         galfitpy.add_sersic_component(input_file, center, mag, src_size, axis_ratio, pa)
     else:
     
         for i in models:
             if (i == 'psf'):
-                galfitpy.add_psf_component(input_file, center, mag+2.5)
+                galfitpy.add_psf_component(input_file, center, mag)
             elif (i == 'sersic'):
                 galfitpy.add_sersic_component(input_file, center, mag, src_size, 1.0, axis_ratio, pa)
             elif (i == 'gauss'):
