@@ -258,9 +258,9 @@ def run_galfit_single(name, instr, wave, models, conv_box=[200,200], region_size
     
         for i in models:
             if (i == 'psf'):
-                galfitpy.add_psf_component(input_file, center, mag)
+                galfitpy.add_psf_component(input_file, center, mag+0.752)
             elif (i == 'sersic'):
-                galfitpy.add_sersic_component(input_file, center, mag, src_size, 1.0, axis_ratio, pa)
+                galfitpy.add_sersic_component(input_file, center, mag+0.752, src_size, 1.0, axis_ratio, pa)
             elif (i == 'gauss'):
                 galfitpy.add_gaussian_component(input_file, center, mag, src_size, axis_ratio, pa)
             elif (i == 'sky'):
