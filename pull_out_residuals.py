@@ -16,11 +16,11 @@ pacs_info = pd.read_csv(morph_dir+'pacs70_image_info.csv', index_col=0)
 
 names = bat_info.index.values
 #names = ['Mrk79']
-out_dir = morph_dir+'results/sersic/PACS70/'
+out_dir = morph_dir+'results/psf/PACS160/'
 
 for n in names:
     
-    fn = out_dir+n+'_pacs70_sersic.fits'
+    fn = out_dir+n+'_pacs160_psf.fits'
 
     if os.path.exists(fn):  
         print 'Pulling out residuals for ', n
@@ -43,7 +43,6 @@ for n in names:
         header['CDELT2'] = header_image['CDELT2']
         header['CROTA2'] = header_image['CROTA2']
         hdu = pyf.PrimaryHDU(data = residuals, header = header)
-        fn_split = fn.split('.')
-        new_fn = fn_split[0]+'_residuals.fits'
+        new_fn = out_dir+n+'_pacs160_psf_residuals.fits'
         hdu.writeto(new_fn, clobber = True)
     
